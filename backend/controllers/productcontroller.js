@@ -23,4 +23,15 @@ const getproducts=async(req,res)=>{
         
     }
 }
-module.exports={createproduct,getproducts}
+
+
+const getproductbyid=async(req,res)=>{
+    try {
+        let id=req.params.id;
+        let product=await productmodel.findById(id);
+        return res.status(200).json(product)
+    } catch (error) {
+        return res.status(500).json({error:'internal server error'})
+    }
+}
+module.exports={createproduct,getproducts,getproductbyid}

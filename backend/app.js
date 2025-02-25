@@ -2,15 +2,17 @@ const express=require('express');
 const dotenv=require('dotenv');
 const mongoose=require('mongoose')
 const connectDb=require('./config/db');
+connectDb()// mongodb connects function logic written in config file
+const cors=require('cors');
+
 const userroutes=require('./routes/userroutes');
 const productroutes=require('./routes/productroutes');
-const cors=require('cors');
 //
-dotenv.config()
-const app=express();
-connectDb()
-app.use(express.json())
-app.use(cors())
+dotenv.config();//load all constants in dotenv file
+const app=express();//
+
+app.use(express.json());//converts data json-js or js to json
+app.use(cors()); //to give access from any front end server
 
 //routes middleware
 app.use('/api',userroutes);
