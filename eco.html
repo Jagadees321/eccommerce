@@ -64,7 +64,7 @@
     <div class="product-container" id="products"></div>
 
     <script>
-        const API_URL = "https://fakestoreapi.com/products";
+        const API_URL = "http://localhost:3685/api/products";
 
         async function fetchProducts() {
             try {
@@ -79,11 +79,11 @@
                     productCard.classList.add("product-card");
 
                     productCard.innerHTML = `
-                        <img src="${product.image}" alt="${product.title}">
+                        <img src="${product.img}" alt="${product.title}">
                         <h3>${product.title}</h3>
                         <p>${product.description.substring(0, 50)}...</p>
                         <p><strong>Price: ${product.price}</strong></p>
-                        <button onclick="addToCart(${product.id}, '${product.title}', ${product.price}, '${product.image}')">Add to Cart</button>
+                        <button onclick="addToCart(${product.id}, '${product.title}', ${product.price}, '${product.img}')">Add to Cart</button>
                     `;
 
                     productContainer.appendChild(productCard);
@@ -93,9 +93,9 @@
             }
         }
 
-        function addToCart(id, title, price, image) {
+        function addToCart(id, title, price, img) {
             let cart = JSON.parse(localStorage.getItem("cart")) || [];
-            let product = { id, title, price, image };
+            let product = { id, title, price, img };
             cart.push(product);
             localStorage.setItem("cart", JSON.stringify(cart));
             alert(`${title} added to cart!`);
