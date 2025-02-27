@@ -42,7 +42,10 @@ const getcarts = async (req, res) => {
                     email: userDetails.email,
                     title: productDetails.title,
                     price: productDetails.price,
-                    description: productDetails.description
+                    description: productDetails.description,
+                    userid:cart.userid,
+                    productid:cart.productid,
+                    _id:cart._id
                 };
             })
         );
@@ -54,4 +57,52 @@ const getcarts = async (req, res) => {
     }
 };
 
-module.exports = { createcart, getcarts };
+
+
+const getcartsByuser = async (req, res) => {
+    try {
+        let userid=req.params.userid;
+        let carts = await cartmodel.find({userid:userid}); 
+
+        let cartData = await Promise.all(
+            carts.map(async (cart) => {
+                let userDetails = await usermodel.findById(cart.userid); // ✅ Fix incorrect field reference
+                let productDetails = await productmodel.findById(cart.productid); // ✅ Fix incorrect field reference
+
+                if (!userDetails || !productDetails) return null;
+
+                return {
+                    username: userDetails.username,
+                    email: userDetails.email,
+                    title: productDetails.title,
+                    price: productDetails.price,
+                    description: productDetails.description,
+                    userid:cart.userid,
+                    productid:cart.productid,
+                    _id:cart._id
+                };
+            })
+        );
+
+        return res.status(200).json(cartData.filter(Boolean)); // ✅ Ensures null values are removed
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: "Internal Server Error: " + error.message });
+    }
+};
+
+const upadtecart=async(req,res)=>{
+    try {
+        let cartid=req.params.cartid;
+        let upadetedcart=await cartmodel.findByIdAndUpdate(cartid,req.body);
+        if(!upadetedcart){
+            return res.status(400).json({ error: "cart not found" });
+        }
+        return res.status(200).json({message:"cart updated"})
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: "Internal Server Error: " + error.message });
+    }
+}
+
+module.exports = { createcart, getcarts ,getcartsByuser,upadtecart};
