@@ -8,6 +8,7 @@ const cors=require('cors');
 const userroutes=require('./routes/userroutes');
 const productroutes=require('./routes/productroutes');
 const cartroute=require('./routes/cartroutes');
+const orderroutes=require('./routes/orderroutes');
 //
 dotenv.config();//load all constants in dotenv file
 const app=express();//
@@ -19,6 +20,7 @@ app.use(cors()); //to give access from any front end server
 app.use('/api',userroutes);
 app.use('/api',productroutes);
 app.use('/api',cartroute);
+app.use('/api',orderroutes);
 
 
 const port=process.env.port ||3685;
