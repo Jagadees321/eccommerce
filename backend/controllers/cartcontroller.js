@@ -104,5 +104,16 @@ const upadtecart=async(req,res)=>{
         return res.status(500).json({ error: "Internal Server Error: " + error.message });
     }
 }
-
-module.exports = { createcart, getcarts ,getcartsByuser,upadtecart};
+const deletecart = async (req, res) => {
+    try {
+        let id = req.params.id;
+        let deletedcart = await cartmodel.findByIdAndDelete(id);
+        if (!deletedcart) {
+            return res.status(404).json({ error: "cart not found" })
+        }
+        return res.status(200).json({ message: "cart deleted" })
+    } catch (error) {
+        return res.status(500).json({ error: 'internal server error' + error })
+    }
+}
+module.exports = { createcart, getcarts ,getcartsByuser,upadtecart,deletecart};
