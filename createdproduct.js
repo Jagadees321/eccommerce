@@ -2,9 +2,9 @@ const axios = require('axios')
 async function insertproduct() {
     try {
         let product = {
-            title: "Boult W20 with Zen ENC Mic",
-            price: 999,
-            description: " 35H Battery Life, Low Latency Gaming, Made in India, 5.3v Bluetooth  (Glacier Blue, True Wireless)",
+            title: "Boult W20 v2",
+            price: 1999,
+            description: " 40H Battery Life, Low Latency Gaming, Made in India, 5.3v Bluetooth  (Glacier Blue, True Wireless)",
             img: "https://rukminim2.flixcart.com/image/612/612/xif0q/headphone/m/x/o/-original-imagt5cwzxknqpbu.jpeg?q=70",
             stock: 12,
             category: "buds"

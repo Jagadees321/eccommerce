@@ -73,7 +73,8 @@
 
                 const productContainer = document.getElementById("products");
                 productContainer.innerHTML = "";
-
+                console.log(products);
+                
                 products.forEach(product => {
                     const productCard = document.createElement("div");
                     productCard.classList.add("product-card");
@@ -81,7 +82,7 @@
                     productCard.innerHTML = `
                         <img src="${product.img}" alt="${product.title}">
                         <h3>${product.title}</h3>
-                        <p>${product.description.substring(0, 50)}...</p>
+                        <p>${product.description}...</p>
                         <p><strong>Price: ${product.price}</strong></p>
                         <button onclick="addToCart(${product.id}, '${product.title}', ${product.price}, '${product.img}')">Add to Cart</button>
                     `;

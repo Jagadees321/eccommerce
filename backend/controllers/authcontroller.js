@@ -43,7 +43,7 @@ const login = async (req, res) => {
         if (!ismatch) {
             return res.status(400).json({ error: "password not matching" });
         }
-        return res.status(200).json({ message: "login success" });
+        return res.status(200).json({ data:user});
     } catch (error) {
         return res.status(500).json({ message: 'internal server error' })
     }

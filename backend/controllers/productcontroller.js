@@ -18,6 +18,8 @@ const createproduct = async (req, res) => {
 const getproducts = async (req, res) => {
     try {
         let products = await productmodel.find();
+       // console.log(products);
+        
         return res.status(200).json(products)
     } catch (error) {
 
