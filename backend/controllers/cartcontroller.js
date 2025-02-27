@@ -1,53 +1,57 @@
-const cartmodel=require('../models/cartmodel');
+const cartmodel = require('../models/cartmodel');
 const usermodel = require('../models/usermodel');
 const productmodel = require('../models/productmodel');
 
-
-const createcart=async(req,res)=>{
+const createcart = async (req, res) => {
     try {
-        let {userid,productid}=req.body;
-        let user=await usermodel.findById(userid);
-        if(!user){
-            return res.status(400).json({error:"user not found"});
-        }
-        let product=await productmodel.findById(productid);
-        if(!product){
-            return res.status(400).json({error:"product  not found"});
-        }
-        let newcart=await new cartmodel(req.body);
-        newcart.save();
-        return res.status(200).json({data:{userid,productid}});
-    } catch (error) {
-        return res.status(500).json({error:"internal server error"});
-    }
-}
+        let { userid, productid } = req.body;
 
-const getcarts=async (req,res)=>{
+        let user = await usermodel.findById(userid);
+        if (!user) {
+            return res.status(400).json({ error: "User not found" });
+        }
+
+        let product = await productmodel.findById(productid);
+        if (!product) {
+            return res.status(400).json({ error: "Product not found" });
+        }
+
+        let newcart = new cartmodel({ userid, productid }); // Ensure you are creating it with correct fields
+        await newcart.save(); // ✅ Missing `await` fixed
+
+        return res.status(200).json({ data: newcart });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: "Internal server error: " + error.message });
+    }
+};
+
+const getcarts = async (req, res) => {
     try {
-        let cart=await cartmodel.find();
-        let arr=[];
-        cart.foreach((cart)=>{
-             let userdetails= usermodel.findById(cart.userid);
-           console.log(userdetails);
-             
-             let productdetails= productmodel.findById(cart.productid);
-            // console.log(productdetails);
-             let obj={
-                username:userdetails.username,
-                email:userdetails.email,
-                title:productdetails.title,
-                price:productdetails.price,
-                description:productdetails.description
-             }
-             console.log(obj);
-             
-             arr=[...arr,obj];
-        })
-        
-        return res.status(200).json(arr);
-    } catch (error) {
-        return res.status(500).json({error:"internal server error"});
-    }
-}
-module.exports={createcart,getcarts}
+        let carts = await cartmodel.find(); // Retrieve all cart entries
 
+        let cartData = await Promise.all(
+            carts.map(async (cart) => {
+                let userDetails = await usermodel.findById(cart.userid); // ✅ Fix incorrect field reference
+                let productDetails = await productmodel.findById(cart.productid); // ✅ Fix incorrect field reference
+
+                if (!userDetails || !productDetails) return null;
+
+                return {
+                    username: userDetails.username,
+                    email: userDetails.email,
+                    title: productDetails.title,
+                    price: productDetails.price,
+                    description: productDetails.description
+                };
+            })
+        );
+
+        return res.status(200).json(cartData.filter(Boolean)); // ✅ Ensures null values are removed
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: "Internal Server Error: " + error.message });
+    }
+};
+
+module.exports = { createcart, getcarts };
